@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vojenský tréning doma</title>
 
-  <!-- PWA: manifest + farba lišty + iOS ikona -->
+  <!-- PWA -->
   <link rel="manifest" href="./manifest.webmanifest">
   <meta name="theme-color" content="#10b981">
   <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 
   <script src="https://cdn.tailwindcss.com"></script>
-
   <style>
-    /* --- TVOJE ŠTÝLY (ponechané) --- */
     body {
       font-family: 'Inter', sans-serif;
       background-color: #1a1a1a;
@@ -22,70 +20,79 @@
       background-size: cover;
       background-attachment: fixed;
     }
-    .app-container{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:1rem;}
-    .main-card{background-color:rgba(30,30,30,.85);border:2px solid #10b981;box-shadow:0 10px 15px -3px rgba(0,0,0,.2),0 4px 6px -2px rgba(0,0,0,.1);max-width:48rem;width:100%;display:flex;flex-direction:column;justify-content:space-between;height:80vh;border-radius:1rem;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
-    .button{border-radius:.75rem;font-weight:bold;box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);transition:.3s}
-    .start-btn{background:#000;color:#fff}.start-btn:hover{background:#333}
-    .pause-btn{background:#000;color:#fff}.pause-btn:hover{background:#333}
-    .skip-btn{background:#f00;color:#fff}.skip-btn:hover{background:#c00}
-    .restart-btn{background:#ffcc00;color:#1a1a1a}.restart-btn:hover{background:#e6b800}
-    .music-player-card{background-color:rgba(51,51,51,.8);border-radius:1rem;border:1px solid #10b981}
-    .music-volume-slider,.voice-volume-slider{-webkit-appearance:none;appearance:none;height:.5rem;background:#4a4a4a;outline:none;border-radius:9999px;cursor:pointer}
-    .music-volume-slider::-webkit-slider-thumb,.voice-volume-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:1.25rem;height:1.25rem;background:#10b981;border-radius:50%;cursor:pointer}
-    .music-volume-slider::-moz-range-thumb,.voice-volume-slider::-moz-range-thumb{width:1.25rem;height:1.25rem;background:#10b981;border-radius:50%;cursor:pointer}
-    .pause-timer{color:#ef4444}
-    .music-btn{padding:.5rem .8rem;border-radius:9999px;color:#fff;transition:.3s}
-    .music-btn:disabled{opacity:.5;cursor:not-allowed}
-    .music-prev-btn{background:#f00}.music-prev-btn:hover{background:#c00}
-    .music-next-btn{background:#ffcc00;color:#000}.music-next-btn:hover{background:#e6b800}
-    .music-play-pause-btn{background:#000;color:#fff}.music-play-pause-btn:hover{background:#333}
-    .german-flag-btn{background:linear-gradient(90deg,#000 0 33.33%,#f00 33.33% 66.66%,#ffcc00 66.66%);color:#fff;text-shadow:1px 1px 2px rgba(0,0,0,.5);-webkit-background-clip:padding-box;background-clip:padding-box;border:2px solid transparent;border-radius:.75rem;box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);transition:.3s;position:relative}
-    .german-flag-btn>span{position:relative;z-index:2}
-    select{background:#333;color:#fff;padding:8px;border-radius:8px;border:1px solid #10b981}
+    .app-container { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 1rem; }
+    .main-card {
+      background-color: rgba(30, 30, 30, 0.85);
+      border: 2px solid #10b981;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+      max-width: 48rem; width: 100%; display: flex; flex-direction: column; justify-content: space-between; height: 80vh; border-radius: 1rem;
+      backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+    }
+    .button { border-radius: 0.75rem; font-weight: bold; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); transition: all 0.3s; }
+    .start-btn,.pause-btn { background-color:#000; color:#fff; }
+    .start-btn:hover,.pause-btn:hover { background-color:#333; }
+    .skip-btn { background-color:#ff0000; color:#fff; } .skip-btn:hover{ background-color:#cc0000; }
+    .restart-btn { background-color:#ffcc00; color:#1a1a1a; } .restart-btn:hover{ background-color:#e6b800; }
+    .music-player-card { background-color: rgba(51, 51, 51, 0.8); border-radius: 1rem; border: 1px solid #10b981; }
+    .music-volume-slider, .voice-volume-slider {
+      -webkit-appearance: none; appearance: none; height: .5rem; background:#4a4a4a; outline:none; border-radius:9999px; cursor:pointer;
+    }
+    .music-volume-slider::-webkit-slider-thumb, .voice-volume-slider::-webkit-slider-thumb {
+      -webkit-appearance:none; appearance:none; width:1.25rem; height:1.25rem; background:#10b981; border-radius:50%; cursor:pointer;
+    }
+    .music-volume-slider::-moz-range-thumb, .voice-volume-slider::-moz-range-thumb {
+      width:1.25rem; height:1.25rem; background:#10b981; border-radius:50%; cursor:pointer;
+    }
+    .music-btn { padding:.5rem .8rem; border-radius:9999px; color:#fff; transition:all .3s; }
+    .music-btn:disabled{opacity:.5; cursor:not-allowed;}
+    .music-prev-btn{ background:#ff0000; } .music-prev-btn:hover{ background:#cc0000; }
+    .music-next-btn{ background:#ffcc00; color:#000; } .music-next-btn:hover{ background:#e6b800; }
+    .music-play-pause-btn{ background:#000; color:#fff; } .music-play-pause-btn:hover{ background:#333; }
+    .german-flag-btn{ background:linear-gradient(to right,#000 33.33%,#ff0000 33.33%,#ff0000 66.66%,#ffcc00 66.66%); color:white; text-shadow:1px 1px 2px rgba(0,0,0,.5); border:2px solid transparent; border-radius:.75rem; box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06); transition:all .3s; position:relative; }
+    .german-flag-btn>span{ position:relative; z-index:2; }
+    select{ background:#333; color:#fff; padding:8px; border-radius:8px; border:1px solid #10b981; }
   </style>
 </head>
 <body class="bg-neutral-900 text-white font-mono">
-  <!-- --- TVOJA APLIKÁCIA (ponechaná) --- -->
   <div class="app-container">
     <div class="main-card p-8 rounded-2xl text-center">
       <div class="flex justify-between items-center mb-4">
         <h1 id="app-title" class="text-2xl md:text-3xl font-bold text-green-500 uppercase tracking-widest">Vojenský tréning</h1>
         <div class="flex items-center gap-2">
-          <button id="voice-mute-btn" class="p-2 rounded-full text-white bg-neutral-700 hover:bg-neutral-600 transition-colors" data-muted="false">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          <button id="voice-mute-btn" class="p-2 rounded-full text-white bg-neutral-700 hover:bg-neutral-600 transition-colors" data-muted="false" aria-label="Vypnúť hlas">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
           </button>
-          <input id="voice-volume-slider" type="range" min="0" max="1" step="0.01" value="1.0" class="voice-volume-slider w-24">
+          <input id="voice-volume-slider" type="range" min="0" max="1" step="0.01" value="1.0" class="voice-volume-slider w-24" aria-label="Hlasitosť hlasu">
         </div>
       </div>
 
       <div class="flex-grow flex flex-col justify-center">
         <h2 id="phase-display" class="text-xl md:text-2xl font-bold text-green-400 mb-2 uppercase"></h2>
         <p id="exercise-name-display" class="text-3xl md:text-4xl font-extrabold text-green-500 mb-6 uppercase tracking-wider"></p>
-        <div class="my-8"><span id="timer-display" class="text-6xl md:text-8xl font-black text-green-500 transition-colors duration-500"></span></div>
+        <div class="my-8">
+          <span id="timer-display" class="text-6xl md:text-8xl font-black text-green-500 transition-colors duration-500"></span>
+        </div>
         <p id="instruction-display" class="text-sm md:text-md text-neutral-300 min-h-[4rem] text-justify"></p>
       </div>
 
       <div class="flex flex-col gap-4 mt-8">
         <button id="start-pause-btn" class="button w-full py-3 px-6 text-lg start-btn">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block mr-2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> ŠTART
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block mr-2"><polygon points="5 3 19 12 5 21 5 3"/></svg> ŠTART
         </button>
         <div class="flex justify-center gap-4">
           <button id="skip-btn" class="button flex-1 py-3 px-4 skip-btn disabled:opacity-50 disabled:cursor-not-allowed">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block mr-1"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg> Preskočiť
+            ⏭ Preskočiť
           </button>
           <button id="restart-btn" class="button flex-1 py-3 px-4 restart-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block mr-1"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18-3.5M22 12.5a10 10 0 0 1-18 3.5"></path></svg> Reštart
+            🔄 Reštart
           </button>
         </div>
       </div>
 
-      <!-- Prehrávač hudby (ponechané) -->
+      <!-- Prehrávač hudby -->
       <div class="music-player-card mt-6 p-4 flex flex-col gap-3">
-        <!-- … nechávam presne ako v tvojom kóde … -->
         <div class="flex items-center justify-between">
-          <h3 class="text-lg font-bold text-green-400 flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-music"><path d="M9 18V5l12-2V18M9 18a2 2 0 0 1-2 2a2 2 0 0 1-2-2a2 2 0 0 1 2-2a2 2 0 0 1 2 2zM21 16a2 2 0 0 1-2 2a2 2 0 0 1-2-2a2 2 0 0 1 2-2a2 2 0 0 1 2 2z"></path></svg> Prehrávač hudby
-          </h3>
+          <h3 class="text-lg font-bold text-green-400 flex items-center gap-2">🎵 Prehrávač hudby</h3>
           <div class="flex items-center gap-2">
             <label for="pause-time-select" class="text-sm font-bold text-neutral-300">Pauza:</label>
             <select id="pause-time-select" class="bg-neutral-700 text-white rounded-lg p-1 text-sm">
@@ -97,38 +104,302 @@
         </div>
 
         <div class="flex flex-col gap-2">
-          <label for="music-upload" class="german-flag-btn w-full py-2 px-4 rounded-lg text-white font-bold cursor-pointer text-center"><span>Vybrať hudbu</span></label>
+          <label for="music-upload" class="german-flag-btn w-full py-2 px-4 rounded-lg text-white font-bold cursor-pointer text-center">
+            <span>Vybrať hudbu</span>
+          </label>
           <input id="music-upload" type="file" accept="audio/*, video/mp4" multiple class="hidden" />
           <p id="music-track-name" class="text-sm text-neutral-400 truncate text-left">Práve hrá: Žiadna hudba</p>
           <div class="flex justify-between items-center text-sm font-bold text-neutral-300">
             <div class="flex gap-2">
-              <button id="music-prev-btn" class="music-btn music-prev-btn">⏪</button>
-              <button id="music-play-pause-btn" class="music-btn music-play-pause-btn">▶</button>
-              <button id="music-next-btn" class="music-btn music-next-btn">⏩</button>
+              <button id="music-prev-btn" class="music-btn music-prev-btn" aria-label="Predchádzajúca skladba">⏪</button>
+              <button id="music-play-pause-btn" class="music-btn music-play-pause-btn" aria-label="Prehrať/Pauza">⏯</button>
+              <button id="music-next-btn" class="music-btn music-next-btn" aria-label="Ďalšia skladba">⏭</button>
             </div>
             <div class="flex items-center gap-2 w-full ml-4">
-              🔊 <input id="music-volume-slider" type="range" min="0" max="1" step="0.01" value="0.5" class="music-volume-slider" />
+              <span class="text-neutral-400">🔊</span>
+              <input id="music-volume-slider" type="range" min="0" max="1" step="0.01" value="0.5" class="music-volume-slider" />
             </div>
           </div>
         </div>
       </div>
-      <!-- /music -->
     </div>
   </div>
 
-  <!-- --- TVOJ JS (ponechaný) – časovač, hlasové pokyny, hudba --- -->
+  <!-- === Tvoj JS (nezmenená logika) + registrácia SW === -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      /* … sem som ponechal tvoju logiku tréningu presne tak, ako si ju poslal …
-         (aby sa sem všetko zmestilo, skracujem – vlož svoj pôvodný blok JS bez zmien) */
-    });
-  </script>
+      const workoutData = [
+        { phase: 'Rozcvička', exercises: [
+          { name: 'Poskoky s rozpažovaním rúk a nôh', duration: 60, rest: 20, instruction: 'Skáčte a rozpažujte ruky a nohy do strán ako hviezdica. Opakujte rýchlo. Zahrejte celé telo a pripravte kĺby na ďalšie cvičenie.' },
+          { name: 'Beh na mieste s vysokým dvíhaním kolien', duration: 60, rest: 20, instruction: 'Bežte na mieste a dvíhajte kolená čo najvyššie k hrudníku. Dýchajte zhlboka a udržujte tempo.' },
+          { name: 'Krúženie rukami', duration: 60, rest: 20, instruction: 'Krúžte rukami dopredu a dozadu. Uvoľnite ramená a pripravte hornú časť tela na záťaž.' },
+          { name: 'Výpady do strany', duration: 60, rest: 20, instruction: 'Urobte výpad do strany striedavo na obe nohy. Natiahnite vnútorné stehná a udržujte rovnováhu.' },
+          { name: 'Doska do polohy "strechy"', duration: 60, rest: 20, instruction: 'Z pozície dosky prejdite do polohy "strechy" a späť. Naťahujte chrbát a zadné stehenné svaly.' },
+        ]},
+        { phase: 'Hlavný blok (Set 1)', exercises: [
+          { name: 'Kliky', duration: 40, rest: 20, instruction: 'Urobte kliky s telom v jednej rovine. Ak je to ťažké, môžete mať kolená na zemi. Kontrolujte pohyb a dýchajte.' },
+          { name: 'Drepy s výskokom', duration: 40, rest: 20, instruction: 'Urobte hlboký drep a pri výskoku sa odrazte čo najvyššie. Doskočte mäkko na nohy a okamžite prejdite do ďalšieho drepu.' },
+          { name: 'Príťahy na chrbát', duration: 40, rest: 20, instruction: 'Ak nemáte hrazdu, ľahnite si na brucho. Dvíhajte ruky, ako keby ste ťahali činku. Posilnite tak chrbát a zadné ramenné svaly.' },
+          { name: 'Angličáky (kľak-výskok-kľak)', duration: 40, rest: 20, instruction: 'Z postoja urobte drep, dajte ruky na zem, nohy dozadu, urobte klik a späť do výskoku. Explozívny pohyb a celotelové cvičenie!' },
+          { name: 'Beh v doske', duration: 40, rest: 20, instruction: 'Z pozície na klik rýchlo striedavo priťahujte kolená k hrudníku. Udržujte pevné jadro a neprehýbajte sa v chrbte.' },
+          { name: 'Výpady dopredu', duration: 40, rest: 20, instruction: 'Urobte výpady striedavo na ľavú a pravú nohu. Koleno zadnej nohy by sa malo priblížiť k zemi, ale nedotýkať sa jej.' },
+          { name: 'Doska s kolenom k lakťu', duration: 40, rest: 20, instruction: 'Z pozície dosky ťahajte koleno k rovnakému lakťu. Udržujte telo v pevnej polohe a sústreďte sa na brušné svaly.' },
+          { name: 'Rýchly beh na mieste', duration: 40, rest: 20, instruction: 'Bežte na mieste a dvíhajte kolená vysoko. Zvýšte tep a dýchajte rýchlo, ale kontrolovane.' },
+        ]},
+        { phase: 'Hlavný blok (Set 2)', exercises: [
+          { name: 'Prestavka - Priprava na 2. kolo', duration: 60, rest: 0, instruction: 'Máte minútu pauzu, pripravte sa na druhé kolo hlavného bloku!' },
+          { name: 'Kliky', duration: 40, rest: 20, instruction: 'Urobte kliky s telom v jednej rovine. Ak je to ťažké, môžete mať kolená na zemi. Kontrolujte pohyb a dýchajte.' },
+          { name: 'Drepy s výskokom', duration: 40, rest: 20, instruction: 'Urobte hlboký drep a pri výskoku sa odrazte čo najvyššie. Doskočte mäkko na nohy.' },
+          { name: 'Príťahy na chrbát', duration: 40, rest: 20, instruction: 'Ak nemáte hrazdu, ľahnite si na brucho. Dvíhajte ruky, ako keby ste ťahali činku.' },
+          { name: 'Angličáky (kľak-výskok-kľak)', duration: 40, rest: 20, instruction: 'Drep – plank – klik – výskok.' },
+          { name: 'Beh v doske', duration: 40, rest: 20, instruction: 'Koleno k hrudníku v stabilnej doske.' },
+          { name: 'Výpady dopredu', duration: 40, rest: 20, instruction: 'Striedajte nohy, koleno zadnej nohy blízko zeme.' },
+          { name: 'Doska s kolenom k lakťu', duration: 40, rest: 20, instruction: 'Koleno ťahajte k rovnakému lakťu, držte core.' },
+          { name: 'Rýchly beh na mieste', duration: 40, rest: 20, instruction: 'Tempo hore, dýchajte kontrolovane.' },
+        ]},
+        { phase: 'Záver', exercises: [
+          { name: 'Doska', duration: 60, rest: 20, instruction: 'Pevne držte telo v pozícii dosky, brucho zatiahnuté.' },
+          { name: 'Bočná doska (ľavá strana)', duration: 30, rest: 20, instruction: 'Udržujte telo v jednej rovine a zdvihnite boky.' },
+          { name: 'Bočná doska (pravá strana)', duration: 30, rest: 20, instruction: 'Zopakujte na pravú stranu, rovná línia tela.' },
+          { name: 'Preťahovanie', duration: 180, rest: 0, instruction: 'Pretiahnite zadné/predné stehná a ramená, dýchajte a uvoľnite.' },
+        ]},
+      ];
 
-  <!-- PWA: registrácia service workera -->
-  <script>
+      const allExercises = workoutData.flatMap(phase => phase.exercises.map(ex => ({ ...ex, phase: phase.phase })));
+
+      let currentExerciseIndex = 0;
+      let timer = allExercises[0]?.duration || 0;
+      let isPaused = true;
+      let isResting = false;
+      let timerInterval;
+
+      const musicAudio = new Audio();
+      let musicFiles = [];
+      let currentTrackIndex = 0;
+      let isMusicPlaying = false;
+
+      const phaseDisplay = document.getElementById('phase-display');
+      const exerciseNameDisplay = document.getElementById('exercise-name-display');
+      const timerDisplay = document.getElementById('timer-display');
+      const instructionDisplay = document.getElementById('instruction-display');
+      const startPauseBtn = document.getElementById('start-pause-btn');
+      const skipBtn = document.getElementById('skip-btn');
+      const restartBtn = document.getElementById('restart-btn');
+      const musicPlayPauseBtn = document.getElementById('music-play-pause-btn');
+      const musicPrevBtn = document.getElementById('music-prev-btn');
+      const musicNextBtn = document.getElementById('music-next-btn');
+      const musicFileSelector = document.getElementById('music-upload');
+      const musicVolumeSlider = document.getElementById('music-volume-slider');
+      const musicTrackName = document.getElementById('music-track-name');
+      const voiceMuteBtn = document.getElementById('voice-mute-btn');
+      const voiceVolumeSlider = document.getElementById('voice-volume-slider');
+      const pauseTimeSelect = document.getElementById('pause-time-select');
+
+      let voice = null;
+      let voiceVolume = 1.0;
+
+      window.speechSynthesis.onvoiceschanged = () => {
+        const voices = window.speechSynthesis.getVoices();
+        voice = voices.find(v => v.lang === 'sk-SK' && v.name.includes('Female')) || voices.find(v => v.lang.startsWith('sk')) || voices[0];
+      };
+
+      function speakInstruction(text) {
+        if (voiceMuteBtn.dataset.muted === 'true') return;
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'sk-SK';
+        utterance.volume = voiceVolume;
+        if (voice) utterance.voice = voice;
+        window.speechSynthesis.speak(utterance);
+      }
+
+      function updateDisplay() {
+        const currentExercise = allExercises[currentExerciseIndex];
+        phaseDisplay.textContent = currentExercise.phase.toUpperCase();
+        exerciseNameDisplay.textContent = isResting ? 'PAUZA' : currentExercise.name.toUpperCase();
+        timerDisplay.textContent = timer;
+        instructionDisplay.textContent = isResting
+          ? `Pripravte sa na: ${allExercises[currentExerciseIndex + 1]?.name || 'koniec'}`
+          : currentExercise.instruction;
+
+        timerDisplay.classList.toggle('text-green-500', !isResting);
+        timerDisplay.classList.toggle('text-red-500', isResting);
+
+        if (isResting) {
+          exerciseNameDisplay.classList.remove('text-green-500');
+          exerciseNameDisplay.classList.add('text-red-500');
+        } else {
+          exerciseNameDisplay.classList.add('text-green-500');
+          exerciseNameDisplay.classList.remove('text-red-500');
+        }
+
+        startPauseBtn.classList.toggle('start-btn', isPaused);
+        startPauseBtn.classList.toggle('pause-btn', !isPaused);
+        startPauseBtn.innerHTML = isPaused
+          ? '▶️ ŠTART'
+          : '⏸ PAUZA';
+
+        musicPlayPauseBtn.textContent = isMusicPlaying ? '⏸' : '⏯';
+      }
+
+      function startTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+          timer--;
+          if (timer <= 0) {
+            handleNext();
+          } else {
+            updateDisplay();
+          }
+        }, 1000);
+      }
+
+      function handleNext() {
+        const pauseTime = parseInt(pauseTimeSelect.value) || 20;
+        if (!isResting && allExercises[currentExerciseIndex]?.rest > 0) {
+          isResting = true;
+          timer = pauseTime;
+          speakInstruction(`Pauza. Pripravte sa na: ${allExercises[currentExerciseIndex + 1]?.name || 'koniec'}`);
+        } else {
+          currentExerciseIndex++;
+          isResting = false;
+          if (currentExerciseIndex < allExercises.length) {
+            timer = allExercises[currentExerciseIndex].duration;
+            speakInstruction(`${allExercises[currentExerciseIndex].name}. ${allExercises[currentExerciseIndex].instruction}`);
+          } else {
+            handleRestart();
+            alert("Tréning dokončený!");
+            return;
+          }
+        }
+        updateDisplay();
+        if (!isPaused) startTimer();
+      }
+
+      function handleStartPause() {
+        isPaused = !isPaused;
+        if (!isPaused) {
+          if (currentExerciseIndex === 0 && timer === (allExercises[0]?.duration || 0)) {
+            const introText = `${allExercises[currentExerciseIndex].name}. ${allExercises[currentExerciseIndex].instruction}`;
+            speakInstruction(introText);
+            startTimer();
+          } else {
+            window.speechSynthesis.resume();
+            startTimer();
+          }
+        } else {
+          clearInterval(timerInterval);
+          window.speechSynthesis.pause();
+        }
+        updateDisplay();
+        if (isMusicPlaying) {
+          if (!isPaused) musicAudio.play(); else musicAudio.pause();
+        }
+      }
+
+      function handleSkip() {
+        if (currentExerciseIndex >= allExercises.length - 1 && (!isResting || allExercises[currentExerciseIndex]?.rest === 0)) {
+          handleRestart();
+          alert("Tréning dokončený!");
+          return;
+        }
+        window.speechSynthesis.cancel();
+        handleNext();
+        if (!isPaused) startTimer();
+      }
+
+      function handleRestart() {
+        window.speechSynthesis.cancel();
+        clearInterval(timerInterval);
+        currentExerciseIndex = 0;
+        timer = allExercises[0]?.duration || 0;
+        isPaused = true;
+        isResting = false;
+        updateDisplay();
+        if (isMusicPlaying) {
+          musicAudio.pause();
+          musicAudio.currentTime = 0;
+          isMusicPlaying = false;
+        }
+      }
+
+      function handleMusicFileChange(event) {
+        const files = Array.from(event.target.files);
+        musicFiles = files.map(file => ({ name: file.name, url: URL.createObjectURL(file) }));
+        currentTrackIndex = 0;
+        if (files.length > 0) {
+          musicAudio.src = musicFiles[0].url;
+          musicTrackName.textContent = files[0].name;
+        } else {
+          musicAudio.src = "";
+          musicTrackName.textContent = "Žiadna hudba";
+        }
+        isMusicPlaying = false;
+        updateDisplay();
+      }
+
+      function handleMusicPlayPause() {
+        if (musicFiles.length === 0) return;
+        if (isMusicPlaying) musicAudio.pause();
+        else musicAudio.play().catch(()=>{});
+        isMusicPlaying = !isMusicPlaying;
+        updateDisplay();
+      }
+
+      function handleMusicVolumeChange(event) { musicAudio.volume = event.target.value; }
+
+      function handleMusicEnded() {
+        if (musicFiles.length <= 1) { musicAudio.play(); }
+        else {
+          currentTrackIndex = (currentTrackIndex + 1) % musicFiles.length;
+          musicAudio.src = musicFiles[currentTrackIndex].url;
+          musicAudio.play();
+          musicTrackName.textContent = musicFiles[currentTrackIndex].name;
+        }
+      }
+
+      function toggleVoiceMute() {
+        const muted = voiceMuteBtn.dataset.muted === 'true';
+        voiceMuteBtn.dataset.muted = (!muted).toString();
+        if (!muted) {
+          window.speechSynthesis.cancel();
+          voiceMuteBtn.textContent = '🔇';
+        } else {
+          voiceMuteBtn.textContent = '🔊';
+        }
+      }
+
+      voiceMuteBtn.addEventListener('click', toggleVoiceMute);
+      voiceVolumeSlider.addEventListener('input', (e)=>{ voiceVolume = e.target.value; });
+      startPauseBtn.addEventListener('click', handleStartPause);
+      skipBtn.addEventListener('click', handleSkip);
+      restartBtn.addEventListener('click', handleRestart);
+      musicFileSelector.addEventListener('change', handleMusicFileChange);
+      musicPlayPauseBtn.addEventListener('click', handleMusicPlayPause);
+      musicPrevBtn.addEventListener('click', ()=> {
+        if (musicFiles.length <= 1) return;
+        currentTrackIndex = (currentTrackIndex - 1 + musicFiles.length) % musicFiles.length;
+        musicAudio.src = musicFiles[currentTrackIndex].url;
+        if (isMusicPlaying) musicAudio.play().catch(()=>{});
+        musicTrackName.textContent = musicFiles[currentTrackIndex].name;
+      });
+      musicNextBtn.addEventListener('click', ()=> {
+        if (musicFiles.length <= 1) return;
+        currentTrackIndex = (currentTrackIndex + 1) % musicFiles.length;
+        musicAudio.src = musicFiles[currentTrackIndex].url;
+        if (isMusicPlaying) musicAudio.play().catch(()=>{});
+        musicTrackName.textContent = musicFiles[currentTrackIndex].name;
+      });
+      musicVolumeSlider.addEventListener('input', handleMusicVolumeChange);
+      musicAudio.addEventListener('ended', handleMusicEnded);
+
+      updateDisplay();
+    });
+
+    // Registrácia service workeru (dôležité: relatívna cesta v priečinku /index)
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(console.error);
+        navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(()=>{});
       });
     }
   </script>
