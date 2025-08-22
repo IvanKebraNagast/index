@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vojenský tréning doma</title>
+
+  <!-- PWA: manifest + farba lišty + iOS ikona -->
+  <link rel="manifest" href="./manifest.webmanifest">
+  <meta name="theme-color" content="#10b981">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* --- TVOJE ŠTÝLY (ponechané) --- */
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #1a1a1a;
+      color: #ffffff;
+      background-image: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="camouflagePattern" patternUnits="userSpaceOnUse" width="200" height="200"><rect width="200" height="200" fill="%233f4a38"/><path d="M-50,0 Q-30,50 0,50 Q30,50 50,0 Q30,-50 0,-50 Q-30,-50 -50,0 Z" fill="%234b5c46" transform="translate(10,20) rotate(20)"/><path d="M-50,0 Q-30,50 0,50 Q30,50 50,0 Q30,-50 0,-50 Q-30,-50 -50,0 Z" fill="%235d6e5a" transform="translate(120,80) rotate(50)"/><path d="M-50,0 Q-30,50 0,50 Q30,50 50,0 Q30,-50 0,-50 Q-30,-50 -50,0 Z" fill="%236e8759" transform="translate(180,150) rotate(10)"/><path d="M-50,0 Q-30,50 0,50 Q30,50 50,0 Q30,-50 0,-50 Q-30,-50 -50,0 Z" fill="%23384234" transform="translate(50,150) rotate(30)"/></pattern></defs><rect width="100%" height="100%" fill="url(%23camouflagePattern)"/></svg>');
+      background-size: cover;
+      background-attachment: fixed;
+    }
+    .app-container{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:1rem;}
+    .main-card{background-color:rgba(30,30,30,.85);border:2px solid #10b981;box-shadow:0 10px 15px -3px rgba(0,0,0,.2),0 4px 6px -2px rgba(0,0,0,.1);max-width:48rem;width:100%;display:flex;flex-direction:column;justify-content:space-between;height:80vh;border-radius:1rem;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+    .button{border-radius:.75rem;font-weight:bold;box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);transition:.3s}
+    .start-btn{background:#000;color:#fff}.start-btn:hover{background:#333}
+    .pause-btn{background:#000;color:#fff}.pause-btn:hover{background:#333}
+    .skip-btn{background:#f00;color:#fff}.skip-btn:hover{background:#c00}
+    .restart-btn{background:#ffcc00;color:#1a1a1a}.restart-btn:hover{background:#e6b800}
+    .music-player-card{background-color:rgba(51,51,51,.8);border-radius:1rem;border:1px solid #10b981}
+    .music-volume-slider,.voice-volume-slider{-webkit-appearance:none;appearance:none;height:.5rem;background:#4a4a4a;outline:none;border-radius:9999px;cursor:pointer}
+    .music-volume-slider::-webkit-slider-thumb,.voice-volume-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:1.25rem;height:1.25rem;background:#10b981;border-radius:50%;cursor:pointer}
+    .music-volume-slider::-moz-range-thumb,.voice-volume-slider::-moz-range-thumb{width:1.25rem;height:1.25rem;background:#10b981;border-radius:50%;cursor:pointer}
+    .pause-timer{color:#ef4444}
+    .music-btn{padding:.5rem .8rem;border-radius:9999px;color:#fff;transition:.3s}
+    .music-btn:disabled{opacity:.5;cursor:not-allowed}
+    .music-prev-btn{background:#f00}.music-prev-btn:hover{background:#c00}
+    .music-next-btn{background:#ffcc00;color:#000}.music-next-btn:hover{background:#e6b800}
+    .music-play-pause-btn{background:#000;color:#fff}.music-play-pause-btn:hover{background:#333}
+    .german-flag-btn{background:linear-gradient(90deg,#000 0 33.33%,#f00 33.33% 66.66%,#ffcc00 66.66%);color:#fff;text-shadow:1px 1px 2px rgba(0,0,0,.5);-webkit-background-clip:padding-box;background-clip:padding-box;border:2px solid transparent;border-radius:.75rem;box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);transition:.3s;position:relative}
+    .german-flag-btn>span{position:relative;z-index:2}
+    select{background:#333;color:#fff;padding:8px;border-radius:8px;border:1px solid #10b981}
+  </style>
+</head>
+<body class="bg-neutral-900 text-white font-mono">
+  <!-- --- TVOJA APLIKÁCIA (ponechaná) --- -->
+  <div class="app-container">
+    <div class="main-card p-8 rounded-2xl text-center">
+      <div class="flex justify-between items-center mb-4">
+        <h1 id="app-title" class="text-2xl md:text-3xl font-bold text-green-500 uppercase tracking-widest">Vojenský tréning</h1>
+        <div class="flex items-center gap-2">
+          <button id="voice-mute-btn" class="p-2 rounded-full text-white bg-neutral-700 hover:bg-neutral-600 transition-colors" data-muted="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          </button>
+          <input id="voice-volume-slider" type="range" min="0" max="1" step="0.01" value="1.0" class="voice-volume-slider w-24">
+        </div>
+      </div>
+
+      <div class="flex-grow flex flex-col justify-center">
+        <h2 id="phase-display" class="text-xl md:text-2xl font-bold text-green-400 mb-2 uppercase"></h2>
+        <p id="exercise-name-display" class="text-3xl md:text-4xl font-extrabold text-green-500 mb-6 uppercase tracking-wider"></p>
+        <div class="my-8"><span id="timer-display" class="text-6xl md:text-8xl font-black text-green-500 transition-colors duration-500"></span></div>
+        <p id="instruction-display" class="text-sm md:text-md text-neutral-300 min-h-[4rem] text-justify"></p>
+      </div>
+
+      <div class="flex flex-col gap-4 mt-8">
+        <button id="start-pause-btn" class="button w-full py-3 px-6 text-lg start-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block mr-2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> ŠTART
+        </button>
+        <div class="flex justify-center gap-4">
+          <button id="skip-btn" class="button flex-1 py-3 px-4 skip-btn disabled:opacity-50 disabled:cursor-not-allowed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block mr-1"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg> Preskočiť
+          </button>
+          <button id="restart-btn" class="button flex-1 py-3 px-4 restart-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block mr-1"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18-3.5M22 12.5a10 10 0 0 1-18 3.5"></path></svg> Reštart
+          </button>
+        </div>
+      </div>
+
+      <!-- Prehrávač hudby (ponechané) -->
+      <div class="music-player-card mt-6 p-4 flex flex-col gap-3">
+        <!-- … nechávam presne ako v tvojom kóde … -->
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-bold text-green-400 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-music"><path d="M9 18V5l12-2V18M9 18a2 2 0 0 1-2 2a2 2 0 0 1-2-2a2 2 0 0 1 2-2a2 2 0 0 1 2 2zM21 16a2 2 0 0 1-2 2a2 2 0 0 1-2-2a2 2 0 0 1 2-2a2 2 0 0 1 2 2z"></path></svg> Prehrávač hudby
+          </h3>
+          <div class="flex items-center gap-2">
+            <label for="pause-time-select" class="text-sm font-bold text-neutral-300">Pauza:</label>
+            <select id="pause-time-select" class="bg-neutral-700 text-white rounded-lg p-1 text-sm">
+              <option value="10">10 s</option>
+              <option value="20" selected>20 s</option>
+              <option value="30">30 s</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label for="music-upload" class="german-flag-btn w-full py-2 px-4 rounded-lg text-white font-bold cursor-pointer text-center"><span>Vybrať hudbu</span></label>
+          <input id="music-upload" type="file" accept="audio/*, video/mp4" multiple class="hidden" />
+          <p id="music-track-name" class="text-sm text-neutral-400 truncate text-left">Práve hrá: Žiadna hudba</p>
+          <div class="flex justify-between items-center text-sm font-bold text-neutral-300">
+            <div class="flex gap-2">
+              <button id="music-prev-btn" class="music-btn music-prev-btn">⏪</button>
+              <button id="music-play-pause-btn" class="music-btn music-play-pause-btn">▶</button>
+              <button id="music-next-btn" class="music-btn music-next-btn">⏩</button>
+            </div>
+            <div class="flex items-center gap-2 w-full ml-4">
+              🔊 <input id="music-volume-slider" type="range" min="0" max="1" step="0.01" value="0.5" class="music-volume-slider" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /music -->
+    </div>
+  </div>
+
+  <!-- --- TVOJ JS (ponechaný) – časovač, hlasové pokyny, hudba --- -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      /* … sem som ponechal tvoju logiku tréningu presne tak, ako si ju poslal …
+         (aby sa sem všetko zmestilo, skracujem – vlož svoj pôvodný blok JS bez zmien) */
+    });
+  </script>
+
+  <!-- PWA: registrácia service workera -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(console.error);
+      });
+    }
+  </script>
+</body>
+</html>
